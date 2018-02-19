@@ -11,9 +11,13 @@ Initially I wrote a quick Python script that would convert the ouput of "show ma
 
 The problem here is that devices go to sleep and the switch times the mac address out of the table. Since I was doing the upgrade on a holiday, a lot of devices had timed out.  I had been thinking about writing a script to parse the SVI interfaces and then ping the hosts to refresh the MAC and arp tables. This finally gave me the motivation to do it. 
 
-#Usage
+**Usage**
 
-From the core switch run `show run | i ^interface|^_ip address` to output the SVIs and their subnets. The output will look like this:
+From the core switch run 
+
+`show run | i ^interface|^_ip address` 
+
+to output the SVIs and their subnets. The output will look like this:
 ```
 sh run | i ^interface|^_ip address
 interface Vlan1
