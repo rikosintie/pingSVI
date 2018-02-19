@@ -1,0 +1,109 @@
+
+
+
+test_Core#sh run | i ^interface|^_ip address
+interface Vlan1
+# ip address 10.23.128.129 255.255.255.248 secondary
+# ip address 10.23.159.1 255.255.255.248 secondary
+ ip address 10.132.0.1 255.255.255.248
+ ip address 192.168.10.1 255.255.255.240
+interface Vlan2
+ ip address 10.132.2.1 255.255.255.248
+interface Vlan4
+# ip address 10.132.4.1 255.255.255.248
+interface Vlan5
+# ip address 10.23.129.1 255.255.255.248 secondary
+# ip address 10.132.5.1 255.255.255.248
+interface Vlan10
+# ip address 10.132.10.1 255.255.255.248
+interface Vlan11
+interface Vlan15
+# ip address 10.132.15.1 255.255.255.248
+interface Vlan20
+# ip address 10.132.20.1 255.255.255.248
+interface Vlan21
+# ip address 10.132.21.1 255.255.255.248
+interface Vlan25
+# ip address 10.132.25.1 255.255.255.248
+interface Vlan30
+ ip address 10.132.30.128 255.255.255.248
+interface Vlan31
+# ip address 10.132.31.1 255.255.255.248
+interface Vlan40
+# ip address 10.132.40.1 255.255.255.248
+interface Vlan45
+# ip address 10.132.45.1 255.255.255.248
+interface Vlan50
+# ip address 10.132.50.1 255.255.255.248
+interface Vlan60
+# ip address 10.132.60.1 255.255.255.248
+interface Vlan70
+# ip address 10.132.70.1 255.255.255.248
+interface Vlan75
+# ip address 10.132.75.1 255.255.255.248
+interface Vlan80
+# ip address 10.132.80.1 255.255.255.248
+interface Vlan90
+# ip address 10.132.90.1 255.255.255.248
+interface Vlan100
+# ip address 10.132.100.1 255.255.255.248
+interface Vlan110
+# ip address 10.132.110.1 255.255.255.248
+interface Vlan120
+# ip address 10.132.120.1 255.255.255.248
+interface Vlan130
+# ip address 10.132.130.1 255.255.255.248
+interface Vlan140
+# ip address 10.132.140.1 255.255.255.248
+interface Vlan150
+# ip address 10.132.150.1 255.255.255.248
+interface Vlan160
+# ip address 10.132.160.1 255.255.255.248
+interface Vlan170
+# ip address 10.132.170.1 255.255.255.248
+interface Vlan175
+# ip address 10.132.175.1 255.255.255.248
+interface Vlan180
+# ip address 10.132.172.1 255.255.255.248
+interface Vlan212
+ ip address 10.132.208.1 255.255.255.248
+interface Vlan215
+# ip address 10.132.224.1 255.255.255.248
+interface Vlan217
+# ip address 10.132.192.1 255.255.255.248
+interface Vlan230
+# ip address 10.56.230.132 255.255.255.248
+interface Vlan231
+# ip address 10.56.231.132 255.255.255.248
+interface Vlan232
+# ip address 10.56.232.132 255.255.255.248
+interface Vlan233
+# ip address 10.56.233.132 255.255.255.248
+interface Vlan234
+# ip address 10.56.234.132 255.255.255.248
+interface Vlan235
+# ip address 10.56.235.132 255.255.255.248
+interface Vlan236
+# ip address 10.56.236.132 255.255.255.248
+interface Vlan239
+# ip address 10.132.239.1 255.255.255.248
+interface Vlan255
+# ip address 10.132.176.1 255.255.255.248
+interface Vlan246
+# ip address 10.56.246.132 255.255.255.248
+interface Vlan249
+# ip address 10.132.249.1 255.255.255.248
+interface Vlan250
+# ip address 10.132.250.1 255.255.255.248
+interface Vlan251
+# ip address 10.23.158.65 255.255.255.248 secondary
+# ip address 10.132.251.1 255.255.255.248
+interface Vlan248
+# ip address 10.132.248.1 255.255.255.248
+interface Vlan253
+# ip address 10.132.253.1 255.255.255.248
+interface Vlan254
+# ip address 10.132.254.1 255.255.255.248
+
+
+
