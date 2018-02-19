@@ -3,7 +3,7 @@ From sh run | i ^interface|^_ip address parses subnets and pings all host. Popul
 
 NOTE: This script only runs on Linux/MAC. I will try to add Windows support in the future.
 
-I was tasked with replacing the core and edge switches for a government agency. They had added a SCADA network which wasn't well documented and had many HP/Ricoh printers, three SANs, many Ubiquti wireless bridges connecting remote sites and four VWare ESXi hosts. 
+I was tasked with replacing the core and edge switches for a customer. They had added a SCADA network which wasn't well documented and had many HP/Ricoh printers, three SANs, many Ubiquti wireless bridges connecting remote sites and four VWare ESXi hosts. 
 
 The edge switches didn't have port descriptions on a lot of the ports and the patch cables going to the servers were zipped tied into several bundles. I wanted to document what device was on each port before replacing the switches so that I could compare afterwards and make sure everything was moved correctly.
 
