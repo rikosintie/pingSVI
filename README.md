@@ -35,7 +35,9 @@ interface Vlan5
 interface Vlan10
  ip address 10.132.10.1 255.255.255.248
  ```
-Save this to a file named `vlans.txt`. Linux is case sensitve so you must use all lowercase in the file name.
+Save this to a file named `vlans.txt` 
+
+Linux is case sensitve so you must use all lowercase in the file name.
  
 Run the script:
  `python3 pinger.py' 
@@ -49,7 +51,7 @@ Print out the hosts for each subnet
 Ping the hosts
 Print out "Active" for hosts that are alive and "no response" for hosts that don't respond.
 ```
-Here is the output. I didn't have access to the customers network when I ran this for documentation so all the hosts are "no response". The 192.168.10.0 subnet is my home lab.
+Here is the output. I didn't have access to the customer's network when I ran this for documentation so all the hosts are "no response". The 192.168.10.0 subnet is my home lab.
 
 ```
 python3 pinger.py 
