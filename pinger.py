@@ -58,18 +58,19 @@ while counter <= ct:
     subnet = ipaddress.ip_network(IP, strict=False)
     print()
 # On large subnets >/20 the ping process fails. This if statement
-# skips subnets with more than 2100 hosts.
+# skips subnets with more than /20 hosts.
     if subnet.num_addresses < 4100:
-        print('Ping these hosts in Subnet ', subnet)
+        print('Pinging hosts in Subnet ', subnet)
         for i in subnet.hosts():
             i = str(i)
-            print(i)
+# to see all hosts that will be pinged uncomment the next line.
+#            print(i)
             p[i] = subprocess.Popen(['ping', '-n', '-w5', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
         #NOTE: you could set stderr=subprocess.STDOUT to ignore stderr also
 
 
         print()
-        print('***** Results from the Pings *****')
+        print('------ Results from the Pings ------')
 
         while p:
             for ip, proc in p.items():
