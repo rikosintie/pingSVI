@@ -56,81 +56,53 @@ Here is the output. I didn't have access to the customer's network when I ran th
 ```
 python3 pinger.py 
 
-Number of Subnets: 4
 
-Ping these hosts in Subnet  192.168.10.0/28
-192.168.10.1
-192.168.10.2
-192.168.10.3
-192.168.10.4
-192.168.10.5
-192.168.10.6
-192.168.10.7
-192.168.10.8
-192.168.10.9
-192.168.10.10
-192.168.10.11
-192.168.10.12
-192.168.10.13
-192.168.10.14
+Number of Subnets: 3
 
-Ping these hosts in Subnet  10.132.2.0/29
-10.132.2.1
-10.132.2.2
-10.132.2.3
-10.132.2.4
-10.132.2.5
-10.132.2.6
+Pinging hosts in Subnet  10.175.0.0/23
 
-Ping these hosts in Subnet  10.132.5.0/29
-10.132.5.1
-10.132.5.2
-10.132.5.3
-10.132.5.4
-10.132.5.5
-10.132.5.6
+------ Results from the Pings ------
+10.175.0.2 active
+10.175.0.4 active
+10.175.0.3 active
+10.175.0.5 active
+10.175.0.6 active
+...
 
-Ping these hosts in Subnet  10.132.10.0/29
-10.132.10.1
-10.132.10.2
-10.132.10.3
-10.132.10.4
-10.132.10.5
-10.132.10.6
+10.175.1.1 active
+10.175.1.10 active
+10.175.1.11 active
+10.175.1.21 active
+10.175.1.30 active
+...
 
-***** Results from the Pings *****
-192.168.10.3 active
-192.168.10.5 active
-192.168.10.10 active
-192.168.10.13 active
-192.168.10.1 no response
-192.168.10.2 no response
-192.168.10.4 no response
-192.168.10.6 no response
-192.168.10.7 no response
-192.168.10.8 no response
-192.168.10.9 no response
-192.168.10.11 no response
-192.168.10.12 no response
-192.168.10.14 no response
-10.132.2.1 no response
-10.132.2.2 no response
-10.132.2.3 no response
-10.132.2.4 no response
-10.132.2.5 no response
-10.132.2.6 no response
-10.132.5.1 no response
-10.132.5.2 no response
-10.132.5.3 no response
-10.132.5.4 no response
-10.132.5.5 no response
-10.132.5.6 no response
-10.132.10.1 no response
-10.132.10.2 no response
-10.132.10.3 no response
-10.132.10.4 no response
-10.132.10.5 no response
-10.132.10.6 no response
+10.175.0.1 no response
+10.175.0.39 no response
+10.175.0.46 no response
+10.175.1.0 no response
+10.175.1.2 no response
+
+...
+
+Pinging hosts in Subnet  10.175.2.0/23
+
+------ Results from the Pings ------
+10.175.2.1 active
+10.175.2.2 no response
+10.175.2.3 no response
+10.175.2.4 no response
+...
+
+10.175.3.254 no response
+
+Pinging hosts in Subnet  10.175.4.0/24
+
+------ Results from the Pings ------
+10.175.4.1 active
+10.175.4.2 no response
+...
+
+10.175.4.254 no response
 ```
 
  
