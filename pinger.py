@@ -13,7 +13,8 @@ https://www.tutorialspoint.com/python3/python_exceptions.htm
 import os
 import time
 import ipaddress
-from subprocess import Popen, DEVNULL
+from subprocess import Popen, DEVNULL, PIPE
+import subprocess
 print()
 #create a blank list to hold the subnets
 subnet_list = []
@@ -24,8 +25,7 @@ try:
     f = open('vlans.txt', 'r')
 except FileNotFoundError:
             print('vlans.txt does not exist')
-else:    
-#f = open('vlans.txt', 'r')
+else:
     for line in f:
 #strip out empty lines
         if line.strip():
@@ -54,27 +54,35 @@ if ct > 0:
     print('Number of Subnets:', ct + 1)
 p = {} # ip -> process
 while counter <= ct:
-    IP = subnet_list[counter]    
+    IP = subnet_list[counter]
     subnet = ipaddress.ip_network(IP, strict=False)
     print()
-    print('Ping these hosts in Subnet ', subnet)
-    for i in subnet.hosts():
-        i = str(i)
-        print(i)
-        p[i] = Popen(['ping', '-n', '-w5', '-c3', i], stdout=DEVNULL)
-    #NOTE: you could set stderr=subprocess.STDOUT to ignore stderr also
-    counter = counter + 1
-print()
-print('***** Results from the Pings *****')
+# On large subnets >/20 the ping process fails. This if statement
+# skips subnets with more than 2100 hosts.
+    if subnet.num_addresses < 4100:
+        print('Ping these hosts in Subnet ', subnet)
+        for i in subnet.hosts():
+            i = str(i)
+            print(i)
+            p[i] = subprocess.Popen(['ping', '-n', '-w5', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
+        #NOTE: you could set stderr=subprocess.STDOUT to ignore stderr also
 
-while p:
-    for ip, proc in p.items():
-        if proc.poll() is not None: # ping finished
-            del p[ip] # remove from the process list
-            if proc.returncode == 0:
-                print('%s active' % ip)
-            elif proc.returncode == 1:
-                print('%s no response' % ip)
-            else:
-                print('%s error' % ip)
-            break
+
+        print()
+        print('***** Results from the Pings *****')
+
+        while p:
+            for ip, proc in p.items():
+                if proc.poll() is not None: # ping finished
+                    del p[ip] # remove from the process list
+                    if proc.returncode == 0:
+                        print('%s active' % ip)
+                    elif proc.returncode == 1:
+                        print('%s no response' % ip)
+                    else:
+                        print('%s error' % ip)
+                    break
+        counter = counter + 1
+    else:
+        print('Skipped subnet ', subnet)
+        counter += 1
