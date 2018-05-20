@@ -104,5 +104,10 @@ Pinging hosts in Subnet  10.175.4.0/24
 
 10.175.4.254 no response
 ```
+Here is an "asciicinema" recording of the script in action:
+[python3 pinger.py](https://asciinema.org/a/p9ICnD759vWOzvhJLPDxGMphY)
+
+asciicinema is a cool little terminal recording tool. It can be found on github at
+[asciicinema](https://github.com/asciinema/asciinema)
 
  
