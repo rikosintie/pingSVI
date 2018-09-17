@@ -1,7 +1,7 @@
 # pingSVI
 From sh run | i ^interface|^_ip address parses subnets and pings all host. Populates switch's arp table.
 
-NOTE: This script only runs on Linux/MAC. I will try to add Windows support in the future.
+NOTE: This script only runs on Linux/MAC. I will try to add Windows support in the future. You can also use the Windows Subsystem for Linux. I use the Ubuntu 18.04 version but I would think any Linux subsystem would work. Microsoft has an [FAQ](https://docs.microsoft.com/en-us/windows/wsl/faq) on WSL.
 
 I was tasked with replacing the core and edge switches for a customer. They had added a SCADA network which wasn't well documented and had many HP/Ricoh printers, three SANs, many Ubiquti wireless bridges connecting remote sites and four VWare ESXi hosts. 
 
