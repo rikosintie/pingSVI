@@ -13,21 +13,26 @@ https://www.tutorialspoint.com/python3/python_exceptions.htm
 import os
 import time
 import ipaddress
+import platform
 from subprocess import Popen, DEVNULL, PIPE
 import subprocess
 print()
-#create a blank list to hold the subnets
+#  platform_name = os.uname()
+System_name = platform.system()
+print('OS is ', System_name)
+
+# create a blank list to hold the subnets
 subnet_list = []
-#read Vlans.txt and build a list of subnets
-#create a blank list to accept each line in the file from Vlans.txt
+# read Vlans.txt and build a list of subnets
+# create a blank list to accept each line in the file from Vlans.txt
 data = []
 try:
     f = open('vlans.txt', 'r')
 except FileNotFoundError:
-            print('vlans.txt does not exist')
+    print('vlans.txt does not exist')
 else:
     for line in f:
-#strip out empty lines
+        # strip out empty lines
         if line.strip():
             data.append(line)
     f.close
@@ -36,9 +41,9 @@ counter = 0
 while counter <= ct:
     IP = data[counter]
 #    print('raw IP', IP)
-#Remove Enter at end of line
+# Remove Enter at end of line
     IP = IP.strip('\n')
-#skip any line with with a # or interface. This allows you to comment out subnets
+# skip any line with with a # or interface. Allows you to comment out subnets
     if IP.find('interface') != -1 or IP.find('#') != -1:
         counter = counter + 1
         continue
@@ -52,36 +57,47 @@ ct = len(subnet_list)-1
 counter = 0
 if ct > 0:
     print('Number of Subnets:', ct + 1)
-p = {} # ip -> process
+p = {}  # ip -> process
 while counter <= ct:
     IP = subnet_list[counter]
     subnet = ipaddress.ip_network(IP, strict=False)
     print()
-# On large subnets >/20 the ping process fails. This if statement
-# skips subnets with more than /20 hosts.
-    if subnet.num_addresses < 4100:
+# On large subnets >/21 the ping process fails. This if statement
+# skips subnets with more than /21 hosts.
+    if subnet.num_addresses < 2100:
         print('Pinging hosts in Subnet ', subnet)
         for i in subnet.hosts():
             i = str(i)
 # to see all hosts that will be pinged uncomment the next line.
 #            print(i)
-            p[i] = subprocess.Popen(['ping', '-n', '-w5', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
-        #NOTE: you could set stderr=subprocess.STDOUT to ignore stderr also
+#            p[i] = subprocess.Popen(['ping', '-n', '-w5', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
+            #  ran in python 3.8.x
+            if System_name == "Darwin" or "Linux":
+                cmd = "ping"
+                cmd_args = "-c 3"
+            else:
+                cmd = "ping"
+                cmd_args = "-n 3"
+#  subprocess.run([cmd, cmd_args])
+            p[i] = subprocess.Popen([cmd, cmd_args, i], stdout=DEVNULL, stderr=subprocess.STDOUT)
 
+#            p[i] = subprocess.Popen(['ping', '-n', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
+        # NOTE: you could set stderr=subprocess.STDOUT to ignore stderr also
 
         print()
         print('------ Results from the Pings ------')
 
         while p:
             for ip, proc in p.items():
-                if proc.poll() is not None: # ping finished
-                    del p[ip] # remove from the process list
+                if proc.poll() is not None:  # ping finished
+                    del p[ip]  # remove from the process list
                     if proc.returncode == 0:
                         print('%s active' % ip)
-                    elif proc.returncode == 1:
+                    elif proc.returncode != 0:
                         print('%s no response' % ip)
                     else:
                         print('%s error' % ip)
+                        print('%s return' % proc.returncode)
                     break
         counter = counter + 1
     else:
