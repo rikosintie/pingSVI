@@ -10,12 +10,13 @@ https://codereview.stackexchange.com/questions/145126/open-a-text-file-and-remov
 https://www.tutorialspoint.com/python3/python_exceptions.htm
 '''
 
-import os
-import time
+#  import os
+#  import time
 import ipaddress
 import platform
 from subprocess import Popen, DEVNULL, PIPE
 import subprocess
+import shlex
 print()
 #  platform_name = os.uname()
 System_name = platform.system()
@@ -72,14 +73,17 @@ while counter <= ct:
 #            print(i)
 #            p[i] = subprocess.Popen(['ping', '-n', '-w5', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
             #  ran in python 3.8.x
-            if System_name == "Darwin" or "Linux":
-                cmd = "ping"
-                cmd_args = "-c 3"
+            if System_name == "Darwin" or System_name == "Linux":
+                cmd = "ping -n -c 3 " + i
+                args = shlex.split(cmd)
             else:
-                cmd = "ping"
-                cmd_args = "-n 3"
+                cmd = "ping -n 3 " + i
+                args = shlex.split(cmd)
+                shell_needed = True
+#                print("Args", args)
 #  subprocess.run([cmd, cmd_args])
-            p[i] = subprocess.Popen([cmd, cmd_args, i], stdout=DEVNULL, stderr=subprocess.STDOUT)
+            p[i] = subprocess.Popen(args, stdout=subprocess.DEVNULL, \
+                stderr=subprocess.STDOUT)
 
 #            p[i] = subprocess.Popen(['ping', '-n', '-c3', i], stdout=DEVNULL, stderr=subprocess.STDOUT)
         # NOTE: you could set stderr=subprocess.STDOUT to ignore stderr also
@@ -91,6 +95,7 @@ while counter <= ct:
             for ip, proc in p.items():
                 if proc.poll() is not None:  # ping finished
                     del p[ip]  # remove from the process list
+#                    print(proc.returncode)
                     if proc.returncode == 0:
                         print('%s active' % ip)
                     elif proc.returncode != 0:
