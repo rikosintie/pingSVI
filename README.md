@@ -1,3 +1,7 @@
+[![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+![GitHub language count](https://img.shields.io/github/languages/count/rikosintie/nmap-python)
+![Twitter Follow](https://img.shields.io/twitter/follow/rikosintie?style=social)
+
 # pingSVI
 From sh run | i ^interface|^_ip address parses subnets and pings all host. Populates switch's arp table.
 
