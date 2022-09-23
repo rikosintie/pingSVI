@@ -24,7 +24,7 @@ From the core switch run
 `show run | i ^interface|^_ip address` 
 
 to output the SVIs and their subnets. The output will look like this:
-```
+```powershell
 sh run | i ^interface|^_ip address
 interface Vlan1
 # ip address 10.23.128.129 255.255.255.248 secondary
@@ -59,7 +59,7 @@ Print out "Active" for hosts that are alive and "no response" for hosts that don
 ```
 Here is the output. I didn't have access to the customer's network when I ran this for documentation so all the hosts are "no response". The 192.168.10.0 subnet is my home lab.
 
-```
+```powershell
 python3 pinger.py 
 
 
