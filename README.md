@@ -2,7 +2,85 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/rikosintie/nmap-python)
 ![Twitter Follow](https://img.shields.io/twitter/follow/rikosintie?style=social)
 
-# pingSVI
+# Warming the ARP cache with pinger.py
+
+The port maps are only as complete as the ARP tables `config-pull.py`
+collects, and a switch only has an ARP entry for a host that has sent
+traffic recently. `pinger.py` reads a list of subnets and pings every host
+in them so the gateways learn all the endpoints before the discovery run.
+
+Put the subnets in a file (default `vlans.txt`), one per line. You can
+paste straight from a switch —
+
+```text
+show run | i ^interface|^ ip address
+
+interface Vlan10
+ ip address 10.20.10.1 255.255.255.0
+```
+
+— or list them as `address mask` or CIDR:
+
+```text
+10.20.10.0 255.255.255.0
+10.20.20.0/24
+```
+
+Blank lines, lines containing `interface`, and lines starting with `#` are
+ignored, so `#` comments a subnet out. Subnets larger than `-m/--max-hosts`
+addresses (default 2100, i.e. bigger than a `/21`) are skipped.
+
+```bash
+python3 pinger.py
+python3 pinger.py -f user-subnets.txt
+```
+
+### Which subnets are worth pinging
+
+Desktops, laptops, access points, IP phones, and surveillance cameras
+send traffic all the time, so the switches already have a current ARP
+entry for them. Pinging those subnets adds noise without adding much to
+the port maps.
+
+The devices that need warming up are the ones that sit quiet until
+something talks to them:
+
+- Door access controllers
+- Building automation controllers (usually BACnet)
+- Environmental monitoring systems (usually EMS)
+- Any other IoT device that just waits for instructions
+
+When these devices live on their own segmented VLANs, point `pinger.py` at
+just those VLANs — there's no need to sweep the user subnets.
+
+### Being gentle on EDR / NDR
+
+Firing ICMP at every address in a subnet all at once looks exactly like a
+horizontal scan and can get the machine running `pinger.py` alerted on or
+quarantined at customers running CrowdStrike, SentinelOne, Darktrace, and
+similar. Two arguments keep the sweep quiet:
+
+- **`-r`, `--rate`** — the maximum number of pings started per second
+  (default `20`). This is the setting that keeps the traffic looking like
+  background noise instead of a scan. `--rate 0` removes the limit and
+  starts every ping at once (the old, noisy behaviour).
+- **`-c`, `--count`** — ICMP echo requests per host (default `1`). One
+  request is enough to make the gateway learn the MAC; raise it only if
+  you want more confidence that a host is really up.
+
+Host order within each subnet is randomised by default (add `--in-order`
+to disable). Before it starts, the script prints how many hosts it will
+ping and roughly how long the launches will take at the chosen rate.
+
+```bash
+# One echo per host, 10 per second - light background traffic.
+python3 pinger.py -r 10 -c 1
+```
+
+Even a paced sweep is quiet, not invisible — coordinate with the
+customer's SOC first.
+
+pingSVI
 From sh run | i ^interface|^_ip address parses subnets and pings all host. Populates switch's arp table.
 
 NOTE: This script works best on Linux/MAC. You can also use the Windows Subsystem for Linux. On Windows it returns "Active" even for hosts that don't exist. It still updates ARP table which is the purpose. If I get time, I will add the code need to make it work correcly on Windows. 
