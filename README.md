@@ -114,7 +114,8 @@ something talks to them:
 - Door access controllers
 - Building automation controllers (usually BACnet)
 - Environmental monitoring systems (usually EMS)
-- Any other IoT device that just waits for instructions
+- Any other IoT device that waits for instructions
+- Printers set to auto sleep (not auto power off)
 
 When these devices live on their own segmented VLANs, point `pinger.py` at
 just those VLANs — there's no need to sweep the user subnets.
@@ -148,11 +149,10 @@ customer's SOC first.
 
 ## Real-world example
 
-I was tasked with replacing the core and edge switches for a customer. They had added a SCADA network that wasn't well documented, several HP/Ricoh printers that were mission critical, three SANs, Ubiquiti wireless bridges connecting buildings and four VMware ESXi hosts. 
+I was tasked with replacing the core and edge switches for a customer. They had added a SCADA network that wasn't well documented, several HP/Ricoh printers that were mission-critical, three SANs, Ubiquiti wireless bridges connecting buildings and four VMware ESXi hosts. 
 
 The edge switches didn't have port descriptions on most of the ports, and the patch cables going to the servers were zip-tied into several bundles. I wanted to document what device was on each port before replacing the switches so that I could compare afterwards and make sure everything was moved correctly.
 
-Initially, I wrote a quick Python script that would convert the output of "show mac add inter x/x | i Gi" into an easy to read format showing only ports that had MAC addresses. The script also looks up the MAC using the Wireshark OUI database and includes the manufacturer of the NIC. You can grab that script here [Convert Interface MAC addresses to manufacturer name](https://github.com/rikosintie/MAC2Manuf). 
+Initially, I wrote a quick Python script that would convert the output of "show mac add inter x/x | i Gi" into an easy-to-read format showing only ports that had MAC addresses. The script also looks up the MAC address using the Wireshark OUI database and includes the NIC manufacturer. The script used to be a standalone tool; it's now one of the "Helper Scripts" in the Discovery project. You can grab that script here [Creating Port Maps](https://rikosintie.github.io/Discovery/Helper-scripts/#creating-port-maps). 
 
-The problem here is that devices go to sleep and the switch times the MAC address out of the ARP table. Since I was doing the upgrade on a holiday, a lot of devices had timed out.  I had been thinking about writing a script to parse the SVI interfaces and then ping the hosts to refresh the MAC and arp tables. This finally gave me the motivation to do it. 
- 
+The problem with creating port maps is that if a device goes to sleep, the switch ARP table entry will time out and be discarded. Since I was doing the upgrade on a holiday, many devices had timed out. I had been thinking about writing a script to parse the SVI interfaces and then ping the hosts to refresh the MAC and ARP tables. This finally gave me the motivation to do it. 
