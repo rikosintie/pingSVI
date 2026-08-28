@@ -39,8 +39,9 @@ interface Vlan30
 — or list them as `address mask` or CIDR:
 
 ```text
+# iot-subnets.txt
 # Access Controller VLAN
-10.20.10.0 255.255.255.0
+10.20.10.0/24
 # BACnet VLAN
 10.20.20.0/24
 # Environmental Monitoring VLAN
@@ -55,7 +56,7 @@ addresses (default 2100, i.e. bigger than a `/21`) are skipped.
 
 ```bash
 python3 pinger.py
-python3 pinger.py -f user-subnets.txt
+python3 pinger.py -f iot-subnets.txt
 ```
 
 ### All command-line options
