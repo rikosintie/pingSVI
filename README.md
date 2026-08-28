@@ -71,10 +71,22 @@ Number of Subnets: 3
 Pinging 30 hosts in 192.168.10.96/27
 ```
 
-=== "macOS"
+----------------------------------------------------------------
 
+"macOS"
 
+```text
+python3 pinger.py
 
+OS is Darwin, sending 1 echo request per host
+IP addresses have been randomized
+Number of Subnets: 3
+90 hosts to ping at 20/s (~4s of launches)
+
+Pinging 30 hosts in 192.168.10.96/27
+```
+
+----------------------------------------------------------------
 
 "Windows"
 
@@ -136,7 +148,7 @@ customer's SOC first.
 
 ## Real-world example
 
-I was tasked with replacing the core and edge switches for a customer. They had added a SCADA network that wasn't well documented, several HP/Ricoh printers, three SANs, Ubiquiti wireless bridges connecting remote sites and four VMware ESXi hosts. 
+I was tasked with replacing the core and edge switches for a customer. They had added a SCADA network that wasn't well documented, several HP/Ricoh printers that were mission critical, three SANs, Ubiquiti wireless bridges connecting buildings and four VMware ESXi hosts. 
 
 The edge switches didn't have port descriptions on most of the ports, and the patch cables going to the servers were zip-tied into several bundles. I wanted to document what device was on each port before replacing the switches so that I could compare afterwards and make sure everything was moved correctly.
 
