@@ -51,24 +51,52 @@ Blank lines, lines containing `interface`, and lines starting with `#` are
 ignored, so `#` comments out a subnet. Subnets larger than `-m/--max-hosts`
 addresses (default 2100, i.e. bigger than a `/21`) are skipped.
 
+----------------------------------------------------------------
+
 ```bash
 python3 pinger.py
 python3 pinger.py -f user-subnets.txt
 ```
 
-## Cross-platform commands
+### All command-line options
+
+```text
+python3 pinger.py -h
+
+usage: pinger.py [-h] [-f FILE] [-c COUNT] [-r RATE] [--in-order] [--tcp-ports TCP_PORTS] [--tcp-timeout TCP_TIMEOUT] [-m MAX_HOSTS]
+
+Ping every host in the subnets listed in a file to warm the ARP cache.
+
+options:
+  -h, --help            show this help message and exit
+  -f, --file FILE       subnet list file (default: vlans.txt)
+  -c, --count COUNT     ICMP echo requests per host (default: 1, which is enough for ARP)
+  -r, --rate RATE       max pings started per second, 0 = no limit (default: 20)
+  --in-order            ping hosts low-to-high instead of in random order
+  --tcp-ports TCP_PORTS
+                        TCP ports to try on hosts that ignore ICMP, comma-separated (default: "9100"); pass "" to disable the TCP probe
+  --tcp-timeout TCP_TIMEOUT
+                        seconds to wait for each TCP connection (default: 1.0)
+  -m, --max-hosts MAX_HOSTS
+                        skip subnets with more addresses than this (default: 2100)
+```
+
+
+## Cross-platform examples
 
 "Linux"
 
 ```text
-python3 pinger.py                                                                                                                                                   [11:36:18]
+python3 pinger.py -f printer.txt --tcp-ports 9100                                                                                                                     [15:29:47]
 
 OS is Linux, sending 1 echo request per host
 IP addresses have been randomized
+ICMP non-responders will be TCP-probed on port(s) 9100
 Number of Subnets: 3
-90 hosts to ping at 20/s (~4s of launches)
+61 hosts to ping at 20/s (~3s of launches)
 
-Pinging 30 hosts in 192.168.10.96/27
+Pinging 1 hosts in 192.168.10.109/32
+
 ```
 
 ----------------------------------------------------------------
