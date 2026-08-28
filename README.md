@@ -4,35 +4,82 @@
 
 # Warming the ARP cache with pinger.py
 
-The port maps are only as complete as the ARP tables `config-pull.py`
-collects, and a switch only has an ARP entry for a host that has sent
-traffic recently. `pinger.py` reads a list of subnets and pings every host
+If you are pulling the ARP table from a switch, you need to refresh it before running the show command.
+The port maps created by [config-pull.py](https://rikosintie.github.io/Discovery/intro/)
+are only as complete as the ARP table, and a switch only has an ARP entry for a host that has sent
+traffic recently.
+
+`pinger.py` reads a list of subnets and pings every host
 in them so the gateways learn all the endpoints before the discovery run.
 
-Put the subnets in a file (default `vlans.txt`), one per line. You can
+Put the subnets in a file (the default is `vlans.txt`), one per line. You can
 paste straight from a switch —
 
 ```text
 show run | i ^interface|^ ip address
+```
 
+```
+# paste this into vlans.txt
 interface Vlan10
  ip address 10.20.10.1 255.255.255.0
+interface Vlan20
+ ip address 10.20.20.1 255.255.255.0
+interface Vlan30
+ ip address 10.20.30.1 255.255.255.0
 ```
 
 — or list them as `address mask` or CIDR:
 
 ```text
+# Access Controller VLAN
 10.20.10.0 255.255.255.0
+# BACnet VLAN
 10.20.20.0/24
+# Environmental Monitoring VLAN
+10.20.30.0/24
 ```
 
 Blank lines, lines containing `interface`, and lines starting with `#` are
-ignored, so `#` comments a subnet out. Subnets larger than `-m/--max-hosts`
+ignored, so `#` comments out a subnet. Subnets larger than `-m/--max-hosts`
 addresses (default 2100, i.e. bigger than a `/21`) are skipped.
 
 ```bash
 python3 pinger.py
 python3 pinger.py -f user-subnets.txt
+```
+
+## Cross-platform commands
+
+"Linux"
+
+```text
+python3 pinger.py                                                                                                                                                   [11:36:18]
+
+OS is Linux, sending 1 echo request per host
+IP addresses have been randomized
+Number of Subnets: 3
+90 hosts to ping at 20/s (~4s of launches)
+
+Pinging 30 hosts in 192.168.10.96/27
+```
+
+=== "macOS"
+
+
+
+
+"Windows"
+
+```text
+ python3 pinger.py -r 10
+
+OS is Windows, sending 1 echo request per host
+IP addresses have been randomized
+Number of Subnets: 3
+90 hosts to ping at 10/s (~9s of launches)
+
+Pinging 30 hosts in 192.168.10.96/27
 ```
 
 ### Which subnets are worth pinging
