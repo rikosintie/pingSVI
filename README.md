@@ -101,6 +101,8 @@ Number of Subnets: 3
 Pinging 30 hosts in 192.168.10.96/27
 ```
 
+----------------------------------------------------------------
+
 ### Which subnets are worth pinging
 
 Desktops, laptops, access points, IP phones, and surveillance cameras
@@ -119,6 +121,8 @@ something talks to them:
 
 When these devices live on their own segmented VLANs, point `pinger.py` at
 just those VLANs — there's no need to sweep the user subnets.
+
+----------------------------------------------------------------
 
 ### Being gentle on EDR / NDR
 
@@ -146,6 +150,61 @@ python3 pinger.py -r 10 -c 1
 
 Even a paced sweep is quiet, not invisible — coordinate with the
 customer's SOC first.
+
+----------------------------------------------------------------
+
+### Waking sleeping printers
+
+Printers are the hardest devices to get an ARP entry for: their NICs drop
+into a deep sleep and ignore ICMP echo, so even `-c 3` often comes back
+empty. Almost every network printer, though, keeps TCP port 9100 (RAW /
+JetDirect / AppSocket) open, and a bare TCP handshake to an open port
+wakes the NIC where a ping will not.
+
+After the ICMP pass, `pinger.py` opens one TCP connection to port 9100 on
+every host that stayed silent and closes it immediately. Nothing is
+written to the socket, so nothing prints. A host woken this way is
+reported as `active (tcp/9100)`.
+
+- **`--tcp-ports`** — comma-separated ports to try (default `9100`). Add
+  `9101,9102` for multi-port external print servers. Pass `--tcp-ports ""`
+  to switch the TCP probe off and go back to ICMP only.
+- **`--tcp-timeout`** — seconds to wait for each connection (default
+  `1.0`).
+
+```bash
+python3 pinger.py --tcp-ports 9100,9101,9102
+```
+
+A port-9100 sweep is lighter than a port scan but not invisible — some IDS
+flag it as printer reconnaissance. Keep coordinating with the SOC.
+
+**Waking one printer without a sweep.** If the customer would rather not
+run `pinger.py` at all, a single printer can be woken with a one-line
+Python call from the `Discovery` directory:
+
+```bash
+python3 -c "import pinger; print(pinger.tcp_probe('192.168.10.109', [9100], 1.0))"
+```
+
+Swap in the printer's address. It prints `9100` if the handshake
+completed — the printer is now awake and its MAC is back on the switch —
+or `None` if nothing answered on that port within a second. Nothing is
+sent to the printer, so no page comes out.
+
+**Or list every printer as a `/32`.** To wake a known set of printers on a
+normal run without touching the rest of the subnet, put each one in
+`vlans.txt` as a single-host entry:
+
+```text
+ip address 192.168.10.109/32
+ip address 192.168.10.110/32
+```
+
+`pinger.py` expands a `/32` to just that one address, so the run hits
+exactly the printers you listed.
+
+----------------------------------------------------------------
 
 ## Real-world example
 
