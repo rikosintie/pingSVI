@@ -36,7 +36,7 @@ interface Vlan30
  ip address 10.20.30.1 255.255.255.0
 ```
 
-— or list them as `address mask` or CIDR:
+— or list them with a CIDR:
 
 ```text
 # iot-subnets.txt
@@ -48,16 +48,14 @@ interface Vlan30
 10.20.30.0/24
 ```
 
-Blank lines, lines containing `interface`, and lines starting with `#` are
-ignored, so `#` comments out a subnet. Subnets larger than `-m/--max-hosts`
+- Blank lines
+- lines containing `interface`
+- lines starting with `#`
+
+are ignored, so `#` comments out a subnet. Subnets larger than `-m/--max-hosts`
 addresses (default 2100, i.e. bigger than a `/21`) are skipped.
 
 ----------------------------------------------------------------
-
-```bash
-python3 pinger.py
-python3 pinger.py -f iot-subnets.txt
-```
 
 ### All command-line options
 
@@ -143,8 +141,8 @@ The devices that need warming up are the ones that sit quiet until
 something talks to them:
 
 - Door access controllers
-- Building automation controllers (usually BACnet)
-- Environmental monitoring systems (usually EMS)
+- Building automation controllers (Typically called BACnet)
+- Environmental monitoring systems (Typically called EMS)
 - Any other IoT device that waits for instructions
 - Printers set to auto sleep (not auto power off)
 
@@ -196,17 +194,22 @@ written to the socket, so nothing prints. A host woken this way is
 reported as `active (tcp/9100)`.
 
 - **`--tcp-ports`** — comma-separated ports to try (default `9100`). Add
-  `9101,9102` for multi-port external print servers. Pass `--tcp-ports ""`
+  `9101,631` for multi-port external print servers. Pass `--tcp-ports ""`
   to switch the TCP probe off and go back to ICMP only.
+  Typical Printer ports:
+  - JetDirect (Port 9100).
+  - IPP / IPPS requests (Port 631).
+  - LPR / LPD traffic (Port 515). 
 - **`--tcp-timeout`** — seconds to wait for each connection (default
   `1.0`).
 
 ```bash
-python3 pinger.py --tcp-ports 9100,9101,9102
+python3 pinger.py --tcp-ports 9100,631,515
 ```
 
 A port-9100 sweep is lighter than a port scan but not invisible — some IDS
 flag it as printer reconnaissance. Keep coordinating with the SOC.
+
 
 **Waking one printer without a sweep.** If the customer would rather not
 run `pinger.py` at all, a single printer can be woken with a one-line
@@ -232,6 +235,26 @@ ip address 192.168.10.110/32
 
 `pinger.py` expands a `/32` to just that one address, so the run hits
 exactly the printers you listed.
+
+----------------------------------------------------------------
+
+### Why does scanning printers alert the SOC
+
+Printer Exploitation Toolkit (PRET) is an open-source security tool. It automates testing and exploiting vulnerabilities in network printers by targetting the communication languages they speak natively.
+
+PRET focuses on three primary printer command languages:
+
+- PostScript (PS): A Turing-complete programming language used in desktop and enterprise printing. Because it is a full programming language, PRET can execute arbitrary loops, manipulate memory, and access files stored on the device.
+- Printer Command Language (PCL): A widely used page-description language developed by HP. PRET leverages PCL for low-level device configuration changes, system information gathering, and memory access.
+- PJL (Printer Job Language): Designed by HP to control printer status and job settings. PRET uses PJL to read and write to the printer's internal filesystem, modify settings, and alter display messages.
+
+**Defensive Countermeasures**
+
+To mitigate the risks highlighted by PRET:
+- Network Segmentation: Place printers on dedicated, isolated VLANs with strict firewall rules restricting TCP port 9100, 515 (LPD), and 631 (IPP) access exclusively to designated print servers.
+- Disable Unused Protocols: Turn off PostScript, PJL, and legacy raw printing on printers that only require standard IPP/IPPS printing.
+- Firmware Updates: Maintain current firmware releases from manufacturers, as vendor patches frequently restrict access to vulnerable command interpreters.
+- Access Control: Enable administrative authentication for all configuration interfaces and set strong passwords on the control panel.
 
 ----------------------------------------------------------------
 
